@@ -65,7 +65,9 @@ sudo yum install httpd -y
 which httpd
 
 sudo systemctl restart httpd
+
 sudo systemctl enable httpd
+
 sudo systemctl status httpd
 
 ![image](https://user-images.githubusercontent.com/55473846/144192739-83f2641e-688f-4c1e-a841-3b87e1692331.png)
@@ -90,21 +92,33 @@ CONFIGURE APACHE AS A LOAD BALANCER
 I configured Apache as a Load Balancer
 I created an Ubuntu Server 20.04 EC2 instance and name it Project-8-apache-lb, so your EC2 list will look like this:
 Open TCP port 80 on Project-8-apache-lb by creating an Inbound Rule in Security Group.
+
 Install Apache Load Balancer on Project-8-apache-lb server and configure it to point traffic coming to LB to both Web Servers:
+
 #Install apache2
+
 sudo apt update
+
 sudo apt install apache2 -y
+
 sudo apt-get install libxml2-dev
 
 #Enable following modules:
+
 sudo a2enmod rewrite
+
 sudo a2enmod proxy
+
 sudo a2enmod proxy_balancer
+
 sudo a2enmod proxy_http
+
 sudo a2enmod headers
+
 sudo a2enmod lbmethod_bytraffic
 
 #Restart apache2 service
+
 sudo systemctl restart apache2
 
 ![image](https://user-images.githubusercontent.com/55473846/144193305-51bd4728-c75c-4228-a3ed-fca55e01c139.png)
@@ -122,9 +136,13 @@ I made sure apache2 is up and running
 ![image](https://user-images.githubusercontent.com/55473846/144194870-8b1dffdd-3c21-48cd-8a3d-3146bf1ceb87.png)
 
 Make sure apache2 is up and running
+
 sudo systemctl status apache2
-Configuring load balancing on the loan balancer server I ran 
+
+Configuring load balancing on the loan balancer server I ran
+
 sudo vi /etc/apache2/sites-available/000-default.conf
+
 and I entered the below configuration inside the <VirtualHost *:80>  </VirtualHost>
 
 
@@ -167,9 +185,17 @@ by traffic balancing method will distribute incoming load between your Web Serve
 
 I verified that my configuration works – try to access your LB’s public IP address or Public DNS name from your browser:
     
-I tried to refresh my browser load balancer page  http://35.178.182.17/index.php 
-several times and make sure that both webservers receive HTTP GET requests from your LB – new records must appear in each server’s log file. The number of requests to each server was approximately the same since we set loadfactor to the same value for both servers – it means that traffic will be distributed evenly between them.
-After trying to connect to the two webservers (web3) and webserver (web2) through the load balancer through the Ip address ( http://35.178.182.17/index.php) .
+I tried to refresh my browser load balancer page  http://35.178.182.17/index.php
+ 
+several times and make sure that both webservers receive HTTP GET requests from your LB – new records must appear in each server’s log
+ 
+ file. The number of requests to each server was approximately the same since we set loadfactor to the same value for both servers 
+ 
+ – it means that traffic will be distributed evenly between them.
+ 
+After trying to connect to the two webservers (web3) and webserver (web2) through the load balancer through the Ip address (
+ 
+ http://35.178.182.17/index.php) .
     
  I got the two webserver page login.php and I was able to login to connect to the database server as show below
     
@@ -221,8 +247,11 @@ I opened the /etc/host file by using the command below:
 sudo vi /etc/hosts added the flowing into it
 
 172.31.30.6  Web1
+ 
 172.31.23.141  Web1
+ 
 I updated the LB config file with those names instead of IP addresses as shown below
+ 
 BalancerMember http://Web1:80 loadfactor=5 timeout=1
 BalancerMember http://Web2:80 loadfactor=5 timeout=1
 I now tried to curl your Web Servers from LB locally curl http://Web1 or curl http://Web2 
